@@ -16,8 +16,39 @@ dependencies = [
     "beautifulsoup4>=4.12.0",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+]
+
 [project.scripts]
 web-vuln-scanner-mcp = "web_vuln_scanner_mcp.server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/web_vuln_scanner_mcp"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --ignore=src"
+norecursedirs = ["src", ".git", "*.egg-info", "build", "dist"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src/web_vuln_scanner_mcp"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
